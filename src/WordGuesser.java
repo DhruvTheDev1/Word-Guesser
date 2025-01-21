@@ -76,7 +76,7 @@ public class WordGuesser {
 
         // user has guesses and word not guessed yet
         while (remainingGuesses > 0 && randomWord.indexOf("_") != -1) {
-            // game logic
+           // game logic
         }
 
     }
