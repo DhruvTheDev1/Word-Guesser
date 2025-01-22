@@ -39,7 +39,6 @@ public class WordGuesser {
                 System.out.println("Invalid Choice!");
             }
         }
-        scanner.close();
 
         List<String> words = new ArrayList<>();
 
@@ -62,24 +61,83 @@ public class WordGuesser {
         // System.out.println(wordSelected);
         // System.out.println(randomWord);
 
-        startGame(randomWord, guesses);
+        startGame(randomWord, guesses, wordSelected);
     }
 
-    public static void startGame(StringBuilder randomWord, int guesses) {
+    public static void startGame(StringBuilder randomWord, int guesses, String wordSelected) {
         Scanner scanner = new Scanner(System.in);
         int remainingGuesses = guesses;
         Set<Character> guessedLetters = new HashSet<>(26);
 
         System.out.println("--------");
-        System.out.println("--------");
         System.out.println("Lets Begin The Game");
 
         // user has guesses and word not guessed yet
         while (remainingGuesses > 0 && randomWord.indexOf("_") != -1) {
-           // game logic
+            System.out.println("Guesses: " + remainingGuesses);
+            System.out.println("Word: " + randomWord);
+
+            System.out.println("Guess: ");
+            String input = scanner.nextLine().toLowerCase().trim();
+
+            if (input.isEmpty()) {
+                System.out.println("Invalid Input!");
+                continue;
+            }
+
+            // word guess - more than 1 character
+            if (input.length() > 1) {
+                if (input.equals(wordSelected)) {
+                    randomWord = new StringBuilder(wordSelected);
+                    break; // correct word guess
+                } else {
+                    System.out.println("Incorrect word guess");
+                    remainingGuesses -= 2;
+                    continue;
+                }
+            }
+            // letter guess
+            char guess = input.charAt(0);
+
+            if (!Character.isLetter(guess)) {
+                System.out.println("Please enter a valid letter.");
+                continue;
+            }
+
+            if (guessedLetters.contains(guess)) {
+                System.out.println("You have already guessed " + guess);
+                continue;
+            }
+            guessedLetters.add(guess);
+
+            boolean flag = false;
+            for (int i = 0; i < randomWord.length(); i++) {
+                if (wordSelected.charAt(i) == guess) {
+                    randomWord.setCharAt(i, guess);
+                    flag = true;
+                }
+            }
+
+            if (!flag) {
+                System.out.println();
+                System.out.println("Incorrect guess");
+                remainingGuesses--;
+            } else {
+                System.out.println();
+                System.out.println("Correct guess!");
+            }
         }
+
+        System.out.println();
+        if (remainingGuesses <= 0) {
+            System.out.println("GAME OVER!");
+            System.out.println("The word was: " + wordSelected.toUpperCase());
+        } else if (randomWord.indexOf("_") == -1) {
+            System.out.println("You Win!");
+        }
+        System.out.println();
+        scanner.close();
 
     }
 
-    
 }
